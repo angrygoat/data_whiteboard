@@ -1,0 +1,130 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Data Whiteboard"
+basePath: "/api/v1"
+tags:
+  - name: "data_whiteboard"
+schemes:
+  - "https"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /wbobject/{object_id}:
+    get:
+      tags:
+        - "data_whiteboard"
+      summary: "Get a stashed object"
+      operationId: "get_object"
+      parameters:
+        - name: "object_id"
+          in: "path"
+          description: "The GUID of the object to retrieve"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successfully retrieved object"
+          schema:
+            $ref: "#/definitions/WhiteboardObject"
+        404:
+          description: "Object doesn't exist"
+      x-swagger-router-controller: "data_whiteboard_api_orig.web.controllers.whiteboard_controller"
+    delete:
+      tags:
+        - "data_whiteboard"
+      summary: "Remove an object from the cache"
+      operationId: "remove_object"
+      parameters:
+        - name: "object_id"
+          in: "path"
+          description: "The id of the object to remove from the cache"
+          required: true
+          type: "string"
+      responses:
+        202:
+          description: "Successfully deleted object"
+        404:
+          description: "Object doesn't exist"
+      x-swagger-router-controller: "data_whiteboard_api_orig.web.controllers.whiteboard_controller"
+    put:
+      tags:
+        - "data_whiteboard"
+      summary: "Update and replace a data object in the store"
+      operationId: "update_object"
+      parameters:
+        - name: "object_id"
+          in: "path"
+          description: "The GUID of the object to update from the cache"
+          required: true
+          type: "string"
+        - name: "Pet"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/WhiteboardObject"
+      responses:
+        200:
+          description: "Successfully updated whiteboard object"
+        404:
+          description: "Pet doesn't exist"
+      x-swagger-router-controller: "data_whiteboard_api_orig.web.controllers.whiteboard_controller"
+  /wbobject:
+    get:
+      tags:
+        - "data_whiteboard"
+      summary: "Gets all cached objects visible to the user"
+      operationId: "get_all_objects"
+      responses:
+        200:
+          description: "Successfully received all objects."
+          schema:
+            $ref: "#/definitions/WhiteboardObjects"
+      x-swagger-router-controller: "data_whiteboard_api_orig.web.controllers.whiteboard_controller"
+    post:
+      tags:
+        - "data_whiteboard"
+      summary: "Add a new object to the cache"
+      operationId: "add_object"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Object to add to the cache"
+          required: true
+          schema:
+            $ref: "#/definitions/WhiteboardObjects"
+      responses:
+        201:
+          description: "Object added"
+      x-swagger-router-controller: "data_whiteboard_api_orig.web.controllers.whiteboard_controller"
+definitions:
+  WhiteboardObjects:
+    type: array
+    items:
+      $ref: "#/definitions/WhiteboardObject"
+  WhiteboardObject:
+    type: "object"
+    required:
+      - "name"
+      - "guid"
+      - "source"
+      - "user"
+      - "type"
+      - "payload"
+    properties:
+      guid:
+        type: "string"
+      name:
+        type: "string"
+      source:
+        type: "string"
+      user:
+        type: "string"
+      payload:
+        oneOf:
+          - type: "string"
+
+
+
