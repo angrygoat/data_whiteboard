@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-
+import os.path
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import connexion
-
-from swagger_server import encoder
+import encoder
 
 
 def main():

@@ -1,0 +1,32 @@
+# Docker Compose file for Data Whiteboard
+#
+# Learn more: https://docs.docker.com/compose/reference/
+#
+#
+version: '3.7'
+
+x-shared_environment: &shared_environment
+  LOG_LEVEL: ${LOG_LEVEL:-debug}
+
+services:
+  app:
+    build:
+      context: ..
+    environment:
+      <<: *shared_environment
+    depends_on:
+      - mongodb
+    ports:
+      - '8080:8080'
+  mongodb:
+    image: mongo:4.4.3
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+volumes:
+  mongodb_data_container:
